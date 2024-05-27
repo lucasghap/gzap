@@ -9,6 +9,7 @@ import { Button } from './ui/button';
 
 import { LogOut, Settings } from 'lucide-react';
 import { usePathname } from 'next/navigation';
+import { useRouter } from 'next/router';
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
@@ -16,6 +17,8 @@ interface SidebarDesktopProps {
 
 export function SidebarDesktop(props: SidebarDesktopProps) {
   const pathname = usePathname();
+
+  const { push } = useRouter();
 
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-[270px] max-w-xs border-r bg-emerald-500">
@@ -45,7 +48,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                   <span>Vinícius Souza</span>
                 </div>
               </div>
-              <SidebarButton size="sm" icon={LogOut} className="w-full">
+              <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={() => push('/')}>
                 Log Out
               </SidebarButton>
             </div>
