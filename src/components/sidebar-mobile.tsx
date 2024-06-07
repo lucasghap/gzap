@@ -8,23 +8,40 @@ import Link from 'next/link';
 import { SidebarButtonSheet as SidebarButton } from './sidebar-button';
 import { usePathname } from 'next/navigation';
 import { Separator } from './ui/separator';
+import { useRouter } from 'next/router';
+import { signOut } from '@/utils/session';
 
+interface FormInputs {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  companyId: string;
+}
 interface SidebarMobileProps {
   sidebarItems: SidebarItems;
+  userLogged: FormInputs;
 }
 
 export function SidebarMobile(props: SidebarMobileProps) {
   const pathname = usePathname();
 
+  const { push } = useRouter();
+
+  const endSession = () => {
+    signOut();
+    push('/');
+  };
+
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button size="icon" variant="ghost" className=" relative left-3 top-3" onClick={() => console.log('teste')}>
+        <Button size="icon" variant="ghost" className=" relative left-3 top-3">
           <Menu size={20} />
         </Button>
       </SheetTrigger>
       <SheetContent side="left" className="px-3 py-4" hideClose>
-        <SheetHeader className="flex flex-row items-center justify-between space-y-0 bg-lime-600">
+        <SheetHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-b from-emerald-800 to-emerald-400">
           <span className="mx-3 text-lg font-semibold text-foreground">G-Zap</span>
           <SheetClose asChild>
             <Button className="size-7 p-0" variant="ghost">
@@ -45,7 +62,6 @@ export function SidebarMobile(props: SidebarMobileProps) {
                 </SidebarButton>
               </Link>
             ))}
-            {props.sidebarItems.extras}
           </div>
           <div className="absolute bottom-3 left-0 w-full px-3">
             <Separator className="absolute -top-3 left-0 w-full" />
@@ -53,10 +69,10 @@ export function SidebarMobile(props: SidebarMobileProps) {
             <div className="flex">
               <div className="flex w-full items-center justify-between">
                 <div className="flex gap-2">
-                  <span>Vinícius Souza</span>
+                  <span>{props.userLogged?.name}</span>
                 </div>
               </div>
-              <SidebarButton size="sm" icon={LogOut} className="w-full">
+              <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={endSession}>
                 Log Out
               </SidebarButton>
             </div>
