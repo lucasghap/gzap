@@ -1,29 +1,44 @@
 'use client';
-
+import * as Dialog from '@radix-ui/react-dialog';
 import { SidebarButton } from './sidebar-button';
 import { SidebarItems } from '@/types/types';
 import Link from 'next/link';
 import { Separator } from './ui/separator';
 
-import { Button } from './ui/button';
-
-import { LogOut, Settings } from 'lucide-react';
+import { LogOut, PencilLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
+import { signOut } from '@/utils/session';
+import EditUserSidebar from './pages/sidebar/editUser';
+import { useState } from 'react';
+
+interface FormInputs {
+  name: string;
+  email: string;
+  username: string;
+  password: string;
+  companyId: string;
+}
 
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
+  userLogged: FormInputs;
 }
 
 export function SidebarDesktop(props: SidebarDesktopProps) {
   const pathname = usePathname();
-
+  const [showModalEditUser, setShowModalEditUser] = useState<boolean>(false);
   const { push } = useRouter();
 
+  const endSession = () => {
+    signOut();
+    push('/');
+  };
+
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-[270px] max-w-xs border-r bg-emerald-500">
+    <aside className="fixed left-0 top-0 z-40 h-screen w-[270px] max-w-xs border-r bg-gradient-to-b from-emerald-800 to-emerald-400">
       <div className="h-full px-3 py-4">
-        <h3 className="mx-3 text-lg font-semibold text-foreground">G-ZAP</h3>
+        <h3 className="mx-3 text-lg font-semibold text-white">G-ZAP</h3>
         <div className="mt-5">
           <div className="flex w-full flex-col gap-1">
             {props.sidebarItems.links.map((link, index) => (
@@ -37,24 +52,26 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
                 </SidebarButton>
               </Link>
             ))}
-            {props.sidebarItems.extras}
           </div>
           <div className="absolute bottom-3 left-0 w-full px-3">
             <Separator className="absolute -top-3 left-0 w-full" />
 
-            <div className="flex">
-              <div className="flex w-full items-center justify-between">
-                <div className="flex gap-2">
-                  <span>Vinícius Souza</span>
-                </div>
-              </div>
-              <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={() => push('/')}>
+            <div className="grid">
+              <SidebarButton size="sm" icon={PencilLine} className="w-full" onClick={() => setShowModalEditUser(true)}>
+                {props.userLogged?.name}
+              </SidebarButton>
+              <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={endSession}>
                 Log Out
               </SidebarButton>
             </div>
           </div>
         </div>
       </div>
+      {showModalEditUser && (
+        <Dialog.Root open={showModalEditUser} onOpenChange={setShowModalEditUser}>
+          <EditUserSidebar onClose={() => setShowModalEditUser(false)} userData={props.userLogged} />
+        </Dialog.Root>
+      )}
     </aside>
   );
 }
