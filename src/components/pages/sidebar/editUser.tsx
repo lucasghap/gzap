@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
 import {
@@ -51,10 +51,10 @@ const EditUserSidebar: React.FC<EditUserProps> = ({ onClose, userData }) => {
   const form = useForm<FormInputs>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      email: userData.email,
-      name: userData.name,
-      username: userData.username,
-      targetUserId: userData.id,
+      email: userData?.email,
+      name: userData?.name,
+      username: userData?.username,
+      targetUserId: userData?.id,
     },
   });
 
@@ -81,6 +81,17 @@ const EditUserSidebar: React.FC<EditUserProps> = ({ onClose, userData }) => {
       },
     },
   );
+
+  useEffect(() => {
+    if (userData) {
+      form.reset({
+        email: userData.email,
+        name: userData.name,
+        username: userData.username,
+        targetUserId: userData.id,
+      });
+    }
+  }, [userData, form]);
 
   return (
     <div className="mt-32 flex h-screen justify-center">

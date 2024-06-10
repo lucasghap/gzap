@@ -1,4 +1,5 @@
 'use client';
+
 import * as Dialog from '@radix-ui/react-dialog';
 import { SidebarButton } from './sidebar-button';
 import { SidebarItems } from '@/types/types';
@@ -9,7 +10,6 @@ import { LogOut, PencilLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { signOut } from '@/utils/session';
-import EditUserSidebar from './pages/sidebar/editUser';
 import { useState } from 'react';
 
 interface FormInputs {
@@ -23,11 +23,11 @@ interface FormInputs {
 interface SidebarDesktopProps {
   sidebarItems: SidebarItems;
   userLogged: FormInputs;
+  onEditUser: () => void;
 }
 
 export function SidebarDesktop(props: SidebarDesktopProps) {
   const pathname = usePathname();
-  const [showModalEditUser, setShowModalEditUser] = useState<boolean>(false);
   const { push } = useRouter();
 
   const endSession = () => {
@@ -57,7 +57,7 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
             <Separator className="absolute -top-3 left-0 w-full" />
 
             <div className="grid">
-              <SidebarButton size="sm" icon={PencilLine} className="w-full" onClick={() => setShowModalEditUser(true)}>
+              <SidebarButton size="sm" icon={PencilLine} className="w-full" onClick={props.onEditUser}>
                 {props.userLogged?.name}
               </SidebarButton>
               <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={endSession}>
@@ -67,11 +67,6 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
           </div>
         </div>
       </div>
-      {showModalEditUser && (
-        <Dialog.Root open={showModalEditUser} onOpenChange={setShowModalEditUser}>
-          <EditUserSidebar onClose={() => setShowModalEditUser(false)} userData={props.userLogged} />
-        </Dialog.Root>
-      )}
     </aside>
   );
 }

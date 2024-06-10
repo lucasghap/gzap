@@ -3,7 +3,7 @@
 import { SidebarItems } from '@/types/types';
 import { Sheet, SheetClose, SheetContent, SheetHeader, SheetTrigger } from './ui/sheet';
 import { Button } from './ui/button';
-import { LogOut, Menu, X } from 'lucide-react';
+import { LogOut, Menu, PencilLine, X } from 'lucide-react';
 import Link from 'next/link';
 import { SidebarButtonSheet as SidebarButton } from './sidebar-button';
 import { usePathname } from 'next/navigation';
@@ -18,14 +18,15 @@ interface FormInputs {
   password: string;
   companyId: string;
 }
+
 interface SidebarMobileProps {
   sidebarItems: SidebarItems;
   userLogged: FormInputs;
+  onEditUser: () => void;
 }
 
 export function SidebarMobile(props: SidebarMobileProps) {
   const pathname = usePathname();
-
   const { push } = useRouter();
 
   const endSession = () => {
@@ -66,12 +67,10 @@ export function SidebarMobile(props: SidebarMobileProps) {
           <div className="absolute bottom-3 left-0 w-full px-3">
             <Separator className="absolute -top-3 left-0 w-full" />
 
-            <div className="flex">
-              <div className="flex w-full items-center justify-between">
-                <div className="flex gap-2">
-                  <span>{props.userLogged?.name}</span>
-                </div>
-              </div>
+            <div className="grid">
+              <SidebarButton size="sm" icon={PencilLine} className="w-full" onClick={props.onEditUser}>
+                {props.userLogged?.name}
+              </SidebarButton>
               <SidebarButton size="sm" icon={LogOut} className="w-full" onClick={endSession}>
                 Log Out
               </SidebarButton>
