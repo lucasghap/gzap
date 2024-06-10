@@ -2,17 +2,21 @@
 
 import { Home, List, Mail, User, Building } from 'lucide-react';
 import { SidebarDesktop } from './sidebar-desktop';
-import { SidebarItems } from '@/types/types';
-
-import { useMediaQuery } from 'usehooks-ts';
 import { SidebarMobile } from './sidebar-mobile';
+import { SidebarItems } from '@/types/types';
+import { useMediaQuery } from 'usehooks-ts';
 import { api } from '@/services/api';
 import { useQuery } from 'react-query';
+import { useState } from 'react';
+import * as Dialog from '@radix-ui/react-dialog';
+import EditUserSidebar from './pages/sidebar/editUser';
 
 export function Sidebar() {
   const isDesktop = useMediaQuery('(min-width: 640px)', {
     initializeWithValue: false,
   });
+
+  const [showModalEditUser, setShowModalEditUser] = useState<boolean>(false);
 
   const sidebarItemsAdmin: SidebarItems = {
     links: [
@@ -25,7 +29,7 @@ export function Sidebar() {
   const sidebarItemsUser: SidebarItems = {
     links: [
       { label: 'Home', href: '/gzap', icon: Home },
-      { label: 'Instância ', href: '/instancia', icon: List },
+      { label: 'Instância', href: '/instancia', icon: List },
       { label: 'Mensagens', href: '/mensagens', icon: Mail },
     ],
   };
@@ -41,9 +45,25 @@ export function Sidebar() {
 
   const sidebarItems = userLogged?.type === 'admin' ? sidebarItemsAdmin : sidebarItemsUser;
 
-  if (isDesktop) {
-    return <SidebarDesktop sidebarItems={sidebarItems} userLogged={userLogged} />;
-  }
+  return (
+    <div className="absolute">
+      {isDesktop ? (
+        <SidebarDesktop
+          sidebarItems={sidebarItems}
+          userLogged={userLogged}
+          onEditUser={() => setShowModalEditUser(true)}
+        />
+      ) : (
+        <SidebarMobile
+          sidebarItems={sidebarItems}
+          userLogged={userLogged}
+          onEditUser={() => setShowModalEditUser(true)}
+        />
+      )}
 
-  return <SidebarMobile sidebarItems={sidebarItems} userLogged={userLogged} />;
+      <Dialog.Root open={showModalEditUser} onOpenChange={setShowModalEditUser}>
+        <EditUserSidebar onClose={() => setShowModalEditUser(false)} userData={userLogged} />
+      </Dialog.Root>
+    </div>
+  );
 }
