@@ -16,7 +16,6 @@ import { useMutation, useQueryClient } from 'react-query';
 import { toast } from '@/components/ui/use-toast';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { cnpjMask, unmask } from '@/utils/masks';
 
 interface EditCompanyProps {
   onClose: () => void;

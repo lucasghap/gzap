@@ -9,8 +9,21 @@ import { useState } from 'react';
 import { api } from '@/services/api';
 import { useQuery } from 'react-query';
 import RegisterUser from '@/components/pages/usuarios/registerOrEdit';
+import withAuth from '@/hoc/withAuth';
 
-export default function Users() {
+interface User {
+  createdAt: string;
+  email: string;
+  id: string;
+  name: string;
+  username: string;
+  type: string;
+  isActive: boolean;
+  updatedAt: string;
+  companyId: string;
+}
+
+const Users: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -57,7 +70,7 @@ export default function Users() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user) => (
+            {users?.map((user: User) => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>
@@ -81,4 +94,6 @@ export default function Users() {
       )}
     </div>
   );
-}
+};
+
+export default withAuth(Users);

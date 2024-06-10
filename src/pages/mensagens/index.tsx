@@ -12,6 +12,7 @@ import { celMask } from '@/utils/masks';
 import { RefreshCwIcon } from 'lucide-react';
 
 import { Pagination } from '@/components/pages/mensagens/pagination';
+import withAuth from '@/hoc/withAuth';
 
 interface WhatsAppMessageLog {
   companyId: string;
@@ -24,7 +25,7 @@ interface WhatsAppMessageLog {
   phoneNumber: string;
 }
 
-export default function Instance() {
+const Messages: React.FC = () => {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(4);
 
@@ -96,41 +97,51 @@ export default function Instance() {
             Nenhum telefone conectado!
           </div>
         )}
-        <div className="mb-4 flex justify-end">
-          <Button variant="secondary" disabled={!whatsConnectionsInfo}>
-            <RefreshCwIcon size={16} className="mr-2" /> Reenviar Mensagens Mal Sucedidas
-          </Button>
-        </div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Nome do paciente</TableHead>
-              <TableHead>Mensagem</TableHead>
-              <TableHead>Celular</TableHead>
-              <TableHead>Enviado</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {whatsAppLog?.map((whatsappLog: WhatsAppMessageLog) => (
-              <TableRow key={whatsappLog.id}>
-                <TableCell className="font-medium">{whatsappLog.patientName}</TableCell>
-                <TableCell>{whatsappLog.message}</TableCell>
-                <TableCell className="w-64">{celMask(whatsappLog.phoneNumber)}</TableCell>
-                <TableCell className="w-44">{whatsappLog.isSent ? 'Sim' : 'Não'}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-        <Pagination
-          currentPage={page}
-          onNext={nextPage}
-          onPrevious={prevPage}
-          onLimitChange={handleLimitChange}
-          isPreviousDisabled={page === 1}
-          isNextDisabled={Number(whatsAppLog?.length) < limit}
-          limit={limit}
-        />
+        {Number(whatsAppLog?.length) > 0 ? (
+          <>
+            <div className="mb-4 flex justify-end">
+              <Button variant="secondary" disabled={!whatsConnectionsInfo}>
+                <RefreshCwIcon size={16} className="mr-2" /> Reenviar Mensagens Mal Sucedidas
+              </Button>
+            </div>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Nome do paciente</TableHead>
+                  <TableHead>Mensagem</TableHead>
+                  <TableHead>Celular</TableHead>
+                  <TableHead>Enviado</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {whatsAppLog?.map((whatsappLog: WhatsAppMessageLog) => (
+                  <TableRow key={whatsappLog.id}>
+                    <TableCell className="font-medium">{whatsappLog.patientName}</TableCell>
+                    <TableCell>{whatsappLog.message}</TableCell>
+                    <TableCell className="w-64">{celMask(whatsappLog.phoneNumber)}</TableCell>
+                    <TableCell className="w-44">{whatsappLog.isSent ? 'Sim' : 'Não'}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <Pagination
+              currentPage={page}
+              onNext={nextPage}
+              onPrevious={prevPage}
+              onLimitChange={handleLimitChange}
+              isPreviousDisabled={page === 1}
+              isNextDisabled={Number(whatsAppLog?.length) < limit}
+              limit={limit}
+            />
+          </>
+        ) : (
+          <div className="mb-12 mt-6 flex flex-col items-center justify-center gap-4 font-bold text-red-600">
+            Não existem dados de mensagens disponíveis.
+          </div>
+        )}
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(Messages);

@@ -10,8 +10,18 @@ import { api } from '@/services/api';
 import { useQuery } from 'react-query';
 import { cnpjMask } from '@/utils/masks';
 import RegisterOrEditCompany from '@/components/pages/empresas/registerOrEdit';
+import withAuth from '@/hoc/withAuth';
 
-export default function Companies() {
+interface Company {
+  id: string;
+  name: string;
+  cnpj: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const Companies: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [companySelected, setCompanySelected] = useState<any | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
@@ -55,7 +65,7 @@ export default function Companies() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies?.map((company: any) => (
+            {companies?.map((company: Company) => (
               <TableRow key={company.id}>
                 <TableCell className="font-medium">{company.name}</TableCell>
                 <TableCell>{cnpjMask(company.cnpj)}</TableCell>
@@ -82,4 +92,6 @@ export default function Companies() {
       )}
     </div>
   );
-}
+};
+
+export default withAuth(Companies);

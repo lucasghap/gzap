@@ -8,8 +8,9 @@ import { api } from '@/services/api';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from '@/components/ui/use-toast';
 import { celMask } from '@/utils/masks';
+import withAuth from '@/hoc/withAuth';
 
-export default function Instance() {
+const Instance: React.FC = () => {
   const queryClient = useQueryClient();
   const [intervalId, setIntervalId] = useState<any>(null);
 
@@ -124,4 +125,6 @@ export default function Instance() {
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(Instance);
