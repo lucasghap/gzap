@@ -3,9 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { format, parseISO } from 'date-fns';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 
 import { api } from '@/services/api';
-import { useQuery } from 'react-query';
+import { useMutation, useQuery } from 'react-query';
 
 import { celMask } from '@/utils/masks';
 
@@ -13,6 +14,7 @@ import { RefreshCwIcon } from 'lucide-react';
 
 import { Pagination } from '@/components/pages/mensagens/pagination';
 import withAuth from '@/hoc/withAuth';
+import { toast } from '@/components/ui/use-toast';
 
 interface WhatsAppMessageLog {
   companyId: string;
@@ -43,6 +45,13 @@ const Messages: React.FC = () => {
 
   const { data: whatsConnectionsInfo } = useQuery('@connections', whatsAppConnections, {
     refetchOnWindowFocus: false,
+    onError: (err: any) => {
+      toast({
+        title: 'Não foi possível buscar os dados da conexão.',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
   });
 
   async function whatsAppLogConnections() {
@@ -61,6 +70,35 @@ const Messages: React.FC = () => {
     whatsAppLogConnections,
     {
       refetchOnWindowFocus: false,
+      onError: (err: any) => {
+        toast({
+          title: 'Não foi possível buscar as mensagens.',
+          description: err?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
+        });
+      },
+    },
+  );
+
+  const { mutate: resendMessages } = useMutation(
+    async () => {
+      return api.post('/whatsapp-message-log/resend-message');
+    },
+    {
+      onSuccess: () => {
+        toast({
+          title: 'Sucesso!',
+          description: 'As mensagens foram reenviadas!',
+          duration: 3000,
+        });
+      },
+      onError: (error: any) => {
+        toast({
+          title: 'Erro!',
+          description: `Erro ao reenviar as mensagens: ${error.message}`,
+          duration: 3000,
+        });
+      },
     },
   );
 
@@ -100,9 +138,20 @@ const Messages: React.FC = () => {
         {Number(whatsAppLog?.length) > 0 ? (
           <>
             <div className="mb-4 flex justify-end">
-              <Button variant="secondary" disabled={!whatsConnectionsInfo}>
-                <RefreshCwIcon size={16} className="mr-2" /> Reenviar Mensagens Mal Sucedidas
-              </Button>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="secondary" onClick={() => whatsConnectionsInfo && resendMessages()}>
+                      <RefreshCwIcon size={16} className="mr-2" /> Reenviar Mensagens Mal Sucedidas
+                      {!whatsConnectionsInfo && (
+                        <TooltipContent>
+                          <p>Necessário ter o telefone conectado para executar a ação.</p>
+                        </TooltipContent>
+                      )}
+                    </Button>
+                  </TooltipTrigger>
+                </Tooltip>
+              </TooltipProvider>
             </div>
             <Table>
               <TableHeader>
