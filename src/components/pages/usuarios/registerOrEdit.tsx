@@ -105,7 +105,8 @@ const RegisterUser: React.FC<UserModalProps> = ({ onClose, isEditing, userSelect
       onError: (error: any) => {
         toast({
           title: 'Erro ao cadastrar o usuário',
-          description: `${error.message}`,
+          description: error?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
         });
       },
       onSuccess: async () => {
@@ -114,6 +115,7 @@ const RegisterUser: React.FC<UserModalProps> = ({ onClose, isEditing, userSelect
         toast({
           title: 'Sucesso!',
           description: isEditing ? 'Usuário editado!' : 'Usuário cadastrado!',
+          duration: 3000,
         });
 
         onClose();

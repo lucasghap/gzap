@@ -10,6 +10,7 @@ import { useQuery } from 'react-query';
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import EditUserSidebar from './pages/sidebar/editUser';
+import { toast } from './ui/use-toast';
 
 export function Sidebar() {
   const isDesktop = useMediaQuery('(min-width: 640px)', {
@@ -41,6 +42,13 @@ export function Sidebar() {
 
   const { data: userLogged } = useQuery('@users-me', fetchUserLogged, {
     refetchOnWindowFocus: false,
+    onError: (error: any) => {
+      toast({
+        title: 'Erro ao buscar os dados do usuário.',
+        description: error?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
   });
 
   const sidebarItems = userLogged?.type === 'admin' ? sidebarItemsAdmin : sidebarItemsUser;

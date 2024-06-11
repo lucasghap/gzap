@@ -10,6 +10,7 @@ import { api } from '@/services/api';
 import { useQuery } from 'react-query';
 import RegisterUser from '@/components/pages/usuarios/registerOrEdit';
 import withAuth from '@/hoc/withAuth';
+import { toast } from '@/components/ui/use-toast';
 
 interface User {
   createdAt: string;
@@ -35,6 +36,13 @@ const Users: React.FC = () => {
 
   const { data: users } = useQuery('@users', fetchUsers, {
     refetchOnWindowFocus: false,
+    onError: (err: any) => {
+      toast({
+        title: 'Não foi possível buscar os usuários',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
   });
 
   const handleEdituser = (company: any) => {

@@ -44,7 +44,8 @@ const ForgotPassword: React.FC<EditCompanyProps> = ({ onClose }) => {
       onError: (error: any) => {
         toast({
           title: 'Erro ao editar a resetar sua senha',
-          description: `${error.message}`,
+          description: error?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
         });
       },
       onSuccess: async () => {
@@ -53,6 +54,7 @@ const ForgotPassword: React.FC<EditCompanyProps> = ({ onClose }) => {
         toast({
           title: 'Sucesso!',
           description: 'Uma nova senha foi enviada para seu email!',
+          duration: 3000,
         });
 
         onClose();
