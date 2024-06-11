@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import { format, parseISO } from 'date-fns';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -9,10 +8,13 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from '@/components/ui/use-toast';
 import { celMask } from '@/utils/masks';
 import withAuth from '@/hoc/withAuth';
+import useTimerStore from '@/hooks/useTimerStore';
 
 const Instance: React.FC = () => {
   const queryClient = useQueryClient();
   const [intervalId, setIntervalId] = useState<any>(null);
+  const { endTime, setEndTime } = useTimerStore();
+  const [timeLeft, setTimeLeft] = useState<number>(0);
 
   async function whatsAppConnections() {
     const response = await api.get('/connections');
@@ -97,6 +99,36 @@ const Instance: React.FC = () => {
     };
   }, [intervalId, refetchConnections, whatsConnectionsInfo]);
 
+  useEffect(() => {
+    const calculateTimeLeft = () => {
+      if (endTime) {
+        const remaining = endTime - Date.now();
+        setTimeLeft(Math.max(Math.ceil(remaining / 1000), 0));
+      } else {
+        setTimeLeft(0);
+      }
+    };
+
+    if (endTime) {
+      calculateTimeLeft();
+      const timerId = setInterval(calculateTimeLeft, 1000);
+      return () => clearInterval(timerId);
+    }
+  }, [endTime]);
+
+  const handleGenerateQRCode = () => {
+    refetchQRCODE();
+    const duration = 5 * 60 * 1000; // 5 minutos
+    const newEndTime = Date.now() + duration;
+    setEndTime(newEndTime);
+  };
+
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${String(minutes).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+  };
+
   return (
     <div className="flex h-screen justify-center p-16">
       <div className="flex w-full max-w-full flex-col gap-3 overflow-auto p-4 sm:ml-[270px]">
@@ -133,8 +165,8 @@ const Instance: React.FC = () => {
         ) : (
           <div className="mt-16 flex flex-col items-center justify-center gap-4">
             {whatsAppQRCODE?.qrCode && <img src={whatsAppQRCODE?.qrCode} alt="WhatsApp QR Code" />}
-            <Button onClick={() => refetchQRCODE()} disabled={isFetching}>
-              Gerar novo QR-Code
+            <Button onClick={handleGenerateQRCode} disabled={isFetching || timeLeft > 0}>
+              {timeLeft > 0 ? `Aguarde ${formatTime(timeLeft)} para gerar um novo QR-Code` : 'Gerar novo QR-Code'}
             </Button>
           </div>
         )}
