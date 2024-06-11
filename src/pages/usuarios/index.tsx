@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
 import * as Dialog from '@radix-ui/react-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pencil } from 'phosphor-react';

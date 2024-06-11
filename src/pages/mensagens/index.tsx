@@ -65,7 +65,7 @@ const Messages: React.FC = () => {
     return response.data;
   }
 
-  const { data: whatsAppLog } = useQuery<WhatsAppMessageLog[]>(
+  const { data: whatsAppLog, refetch: refretchWhatsAppLog } = useQuery<WhatsAppMessageLog[]>(
     ['@connections-log', page, limit],
     whatsAppLogConnections,
     {
@@ -91,6 +91,7 @@ const Messages: React.FC = () => {
           description: 'As mensagens foram reenviadas!',
           duration: 3000,
         });
+        refretchWhatsAppLog();
       },
       onError: (error: any) => {
         toast({
