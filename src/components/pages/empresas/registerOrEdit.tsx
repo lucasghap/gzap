@@ -45,9 +45,9 @@ const RegisterOrEditCompany: React.FC<CompanyModalProps> = ({ onClose, isEditing
     resolver: zodResolver(FormSchema),
     defaultValues: isEditing
       ? {
-        name: companySelected?.name || '',
-        cnpj: companySelected?.cnpj || '',
-      }
+          name: companySelected?.name || '',
+          cnpj: companySelected?.cnpj || '',
+        }
       : undefined,
   });
 

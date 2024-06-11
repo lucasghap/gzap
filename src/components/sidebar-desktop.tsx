@@ -1,6 +1,5 @@
 'use client';
 
-import * as Dialog from '@radix-ui/react-dialog';
 import { SidebarButton } from './sidebar-button';
 import { SidebarItems } from '@/types/types';
 import Link from 'next/link';
@@ -10,7 +9,6 @@ import { LogOut, PencilLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { signOut } from '@/utils/session';
-import { useState } from 'react';
 
 interface FormInputs {
   name: string;

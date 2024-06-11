@@ -118,7 +118,7 @@ const Instance: React.FC = () => {
 
   const handleGenerateQRCode = () => {
     refetchQRCODE();
-    const duration = 5 * 60 * 1000; // 5 minutos
+    const duration = 3 * 60 * 1000; // 5 minutos
     const newEndTime = Date.now() + duration;
     setEndTime(newEndTime);
   };
