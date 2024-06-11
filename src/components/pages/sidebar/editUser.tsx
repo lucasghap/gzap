@@ -66,7 +66,8 @@ const EditUserSidebar: React.FC<EditUserProps> = ({ onClose, userData }) => {
       onError: (error: any) => {
         toast({
           title: 'Erro ao atualizar seus dados',
-          description: `${error.message}`,
+          description: error?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
         });
       },
       onSuccess: async () => {
@@ -75,6 +76,7 @@ const EditUserSidebar: React.FC<EditUserProps> = ({ onClose, userData }) => {
         toast({
           title: 'Sucesso!',
           description: 'Seus dados foram atualizados!',
+          duration: 3000,
         });
 
         onClose();

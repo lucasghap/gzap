@@ -1,4 +1,3 @@
-// CompanyModal.tsx
 import React from 'react';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { useForm } from 'react-hook-form';
@@ -61,10 +60,11 @@ const RegisterOrEditCompany: React.FC<CompanyModalProps> = ({ onClose, isEditing
       await mutationMethod(mutationUrl, unmaskedData);
     },
     {
-      onError: (error: any) => {
+      onError: (err: any) => {
         toast({
           title: 'Erro ao cadastrar/editar a empresa',
-          description: `${error.message}`,
+          description: err?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
         });
       },
       onSuccess: async () => {
@@ -73,6 +73,7 @@ const RegisterOrEditCompany: React.FC<CompanyModalProps> = ({ onClose, isEditing
         toast({
           title: 'Sucesso!',
           description: isEditing ? 'Empresa editada!' : 'Empresa cadastrada!',
+          duration: 3000,
         });
 
         onClose();

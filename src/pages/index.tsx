@@ -47,14 +47,11 @@ export default function Login() {
 
       sessionStorage.setItem('tkn_gzap', response.data.access_token);
       push('/gzap');
-    } catch (err) {
+    } catch (err: any) {
       toast({
-        title: 'Não foi possivel realizar o login:',
-        description: (
-          <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-            <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-          </pre>
-        ),
+        title: 'Não foi possível realizar o login:',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
       });
     }
   };

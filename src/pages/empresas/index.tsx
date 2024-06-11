@@ -11,6 +11,7 @@ import { useQuery } from 'react-query';
 import { cnpjMask } from '@/utils/masks';
 import RegisterOrEditCompany from '@/components/pages/empresas/registerOrEdit';
 import withAuth from '@/hoc/withAuth';
+import { toast } from '@/components/ui/use-toast';
 
 interface Company {
   id: string;
@@ -31,7 +32,16 @@ const Companies: React.FC = () => {
     return response.data;
   }
 
-  const { data: companies } = useQuery('@company', fetchCompanies);
+  const { data: companies } = useQuery('@company', fetchCompanies, {
+    refetchOnWindowFocus: false,
+    onError: (err: any) => {
+      toast({
+        title: 'Não foi possível buscar o QRCODE.',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
+  });
 
   const handleEditClick = (company: any) => {
     setCompanySelected(company);

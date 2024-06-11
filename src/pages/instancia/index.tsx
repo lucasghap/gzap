@@ -22,6 +22,13 @@ const Instance: React.FC = () => {
   const { data: whatsConnectionsInfo, refetch: refetchConnections } = useQuery('@connections', whatsAppConnections, {
     refetchInterval: intervalId ? 10000 : false,
     refetchOnWindowFocus: false,
+    onError: (err: any) => {
+      toast({
+        title: 'Não foi possível buscar os dados da conexão.',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
     onSuccess: (data) => {
       if (data) {
         clearInterval(intervalId);
@@ -42,6 +49,13 @@ const Instance: React.FC = () => {
   } = useQuery('@qrcode', fetchQRCODE, {
     refetchOnWindowFocus: false,
     enabled: false,
+    onError: (err: any) => {
+      toast({
+        title: 'Não foi possível buscar o QRCODE.',
+        description: err?.message || 'Ocorreu um erro desconhecido',
+        duration: 3000,
+      });
+    },
   });
 
   const { mutate, isLoading: loadingLogout } = useMutation(
@@ -50,16 +64,18 @@ const Instance: React.FC = () => {
       await api.post('/whatsapp/logout');
     },
     {
-      onError: (error: any) => {
+      onError: (err: any) => {
         toast({
           title: 'Erro ao desconectar da sessão',
-          description: `${error.message}`,
+          description: err?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
         });
       },
       onSuccess: async () => {
         toast({
           title: 'Sucesso!',
           description: 'Sessão desconectada!',
+          duration: 3000,
         });
         queryClient.invalidateQueries('@connections');
         refetchQRCODE();
