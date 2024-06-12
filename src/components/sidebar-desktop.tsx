@@ -9,6 +9,7 @@ import { LogOut, PencilLine } from 'lucide-react';
 import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { signOut } from '@/utils/session';
+import { ModeToggle } from './pages/sidebar/toogleMode';
 
 interface FormInputs {
   name: string;
@@ -36,7 +37,11 @@ export function SidebarDesktop(props: SidebarDesktopProps) {
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-[270px] max-w-xs border-r bg-gradient-to-b from-emerald-800 to-emerald-400">
       <div className="h-full px-3 py-4">
-        <h3 className="mx-3 text-lg font-semibold text-white">G-ZAP</h3>
+        <div className="flex justify-between">
+          <h3 className="mx-3 text-lg font-semibold text-white">G-ZAP</h3>
+          <ModeToggle />
+        </div>
+
         <div className="mt-5">
           <div className="flex w-full flex-col gap-1">
             {props.sidebarItems.links.map((link, index) => (
