@@ -6,7 +6,7 @@ export default function GZapHome() {
   });
 
   return (
-    <div className={`flex h-screen items-center justify-center bg-slate-100 ${isDesktop ? 'ml-64' : 'ml-0'}`}>
+    <div className={`flex h-screen items-center justify-center  ${isDesktop ? 'ml-64' : 'ml-0'}`}>
       <div className="text-center">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
           GZAP - Sua Central de Gerenciamento de Mensagens

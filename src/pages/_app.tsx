@@ -7,6 +7,7 @@ import '../styles/global.css';
 import { Sidebar } from '@/components/sidebar';
 import { useRouter } from 'next/router';
 import { Toaster } from '@/components/ui/toaster';
+import { ThemeProvider } from '@/components/theme-provider';
 
 const Home: React.FC<AppProps> = ({ Component, pageProps }) => {
   const { pathname } = useRouter();
@@ -17,9 +18,11 @@ const Home: React.FC<AppProps> = ({ Component, pageProps }) => {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {shouldRenderSidebar && <Sidebar />}
-      <Component {...pageProps} />
-      <Toaster />
+      <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+        {shouldRenderSidebar && <Sidebar />}
+        <Component {...pageProps} />
+        <Toaster />
+      </ThemeProvider>
     </QueryClientProvider>
   );
 };

@@ -10,6 +10,7 @@ import { usePathname } from 'next/navigation';
 import { Separator } from './ui/separator';
 import { useRouter } from 'next/router';
 import { signOut } from '@/utils/session';
+import { ModeToggle } from './pages/sidebar/toogleMode';
 
 interface FormInputs {
   name: string;
@@ -43,7 +44,10 @@ export function SidebarMobile(props: SidebarMobileProps) {
       </SheetTrigger>
       <SheetContent side="left" className="px-3 py-4" hideClose>
         <SheetHeader className="flex flex-row items-center justify-between space-y-0 bg-gradient-to-b from-emerald-800 to-emerald-400">
-          <span className="mx-3 text-lg font-semibold text-foreground">G-Zap</span>
+          <div className="flex justify-between">
+            <span className="mx-3 text-lg font-semibold text-foreground">G-Zap</span>
+            <ModeToggle />
+          </div>
           <SheetClose asChild>
             <Button className="size-7 p-0" variant="ghost">
               <X size={15} />
