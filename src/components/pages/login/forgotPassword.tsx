@@ -87,7 +87,7 @@ const ForgotPassword: React.FC<EditCompanyProps> = ({ onClose }) => {
               )}
             />
             <DialogFooter>
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} loading={isLoading} spinnerSize={24}>
                 Salvar
               </Button>
             </DialogFooter>

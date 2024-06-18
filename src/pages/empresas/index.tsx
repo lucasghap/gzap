@@ -1,17 +1,16 @@
 import { Button } from '@/components/ui/button';
-
 import * as Dialog from '@radix-ui/react-dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Pencil } from 'phosphor-react';
-
 import { useState } from 'react';
-
 import { api } from '@/services/api';
-import { useQuery } from 'react-query';
+import { useQuery, useMutation, useQueryClient } from 'react-query';
 import { cnpjMask } from '@/utils/masks';
 import RegisterOrEditCompany from '@/components/pages/empresas/registerOrEdit';
 import withAuth from '@/hoc/withAuth';
 import { toast } from '@/components/ui/use-toast';
+import { Switch } from '@/components/ui/switch';
+import Head from 'next/head';
 
 interface Company {
   id: string;
@@ -24,8 +23,9 @@ interface Company {
 
 const Companies: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [companySelected, setCompanySelected] = useState<any | null>(null);
+  const [companySelected, setCompanySelected] = useState<Company | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const queryClient = useQueryClient();
 
   async function fetchCompanies() {
     const response = await api.get('/companies/all');
@@ -36,14 +36,37 @@ const Companies: React.FC = () => {
     refetchOnWindowFocus: false,
     onError: (err: any) => {
       toast({
-        title: 'Não foi possível buscar o QRCODE.',
+        title: 'Não foi possível buscar as empresas.',
         description: err?.message || 'Ocorreu um erro desconhecido',
         duration: 3000,
       });
     },
   });
 
-  const handleEditClick = (company: any) => {
+  const updateCompanyStatus = useMutation(
+    async ({ id, isActive }: { id: string; isActive: boolean }) => {
+      await api.patch(`/companies/${id}`, { isActive });
+    },
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries('@company');
+        toast({
+          title: 'Status atualizado',
+          description: 'O status da empresa foi atualizado com sucesso',
+          duration: 3000,
+        });
+      },
+      onError: (err: any) => {
+        toast({
+          title: 'Erro ao atualizar status',
+          description: err?.message || 'Ocorreu um erro desconhecido',
+          duration: 3000,
+        });
+      },
+    },
+  );
+
+  const handleEditClick = (company: Company) => {
     setCompanySelected(company);
     setIsEditing(true);
     setShowModal(true);
@@ -55,8 +78,15 @@ const Companies: React.FC = () => {
     setShowModal(true);
   };
 
+  const handleToggleActive = (company: Company) => {
+    updateCompanyStatus.mutate({ id: company.id, isActive: !company.isActive });
+  };
+
   return (
-    <div className=" flex h-screen justify-center">
+    <div className="flex h-screen justify-center">
+      <Head>
+        <title>GZAP | Empresas</title>
+      </Head>
       <div className="w-full max-w-full overflow-auto p-4 sm:ml-[270px]">
         <h2 className="my-6 border-b pb-2 text-3xl font-semibold tracking-tight">Empresas Cadastradas</h2>
 
@@ -79,7 +109,9 @@ const Companies: React.FC = () => {
               <TableRow key={company.id}>
                 <TableCell className="font-medium">{company.name}</TableCell>
                 <TableCell>{cnpjMask(company.cnpj)}</TableCell>
-                <TableCell>{company.isActive ? 'Sim' : 'Não'}</TableCell>
+                <TableCell>
+                  <Switch checked={company.isActive} onCheckedChange={() => handleToggleActive(company)} />
+                </TableCell>
                 <TableCell>
                   <Button onClick={() => handleEditClick(company)}>
                     <Pencil className="mr-2" />

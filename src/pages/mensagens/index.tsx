@@ -15,6 +15,7 @@ import { RefreshCwIcon } from 'lucide-react';
 import { Pagination } from '@/components/pages/mensagens/pagination';
 import withAuth from '@/hoc/withAuth';
 import { toast } from '@/components/ui/use-toast';
+import Head from 'next/head';
 
 interface WhatsAppMessageLog {
   companyId: string;
@@ -80,7 +81,7 @@ const Messages: React.FC = () => {
     },
   );
 
-  const { mutate: resendMessages } = useMutation(
+  const { mutate: resendMessages, isLoading: isLoadingResendMessages } = useMutation(
     async () => {
       return api.post('/whatsapp-message-log/resend-message');
     },
@@ -105,6 +106,9 @@ const Messages: React.FC = () => {
 
   return (
     <div className="flex h-screen justify-center p-16">
+      <Head>
+        <title>GZAP | Mensagens</title>
+      </Head>
       <div className="flex w-full max-w-full flex-col gap-3 overflow-auto p-4 sm:ml-[270px]">
         <h2 className="my-6  border-b pb-2 text-3xl font-semibold tracking-tight">Mensagens</h2>
 
@@ -142,7 +146,12 @@ const Messages: React.FC = () => {
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="secondary" onClick={() => whatsConnectionsInfo && resendMessages()}>
+                    <Button
+                      variant="secondary"
+                      onClick={() => whatsConnectionsInfo && resendMessages()}
+                      loading={isLoadingResendMessages}
+                      spinnerSize={24}
+                    >
                       <RefreshCwIcon size={16} className="mr-2" /> Reenviar Mensagens Mal Sucedidas
                       {!whatsConnectionsInfo && (
                         <TooltipContent>
