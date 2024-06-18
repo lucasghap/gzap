@@ -12,6 +12,7 @@ import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import ForgotPassword from '@/components/pages/login/forgotPassword';
 import { PasswordInput } from '@/components/ui/password-input';
+import Head from 'next/head';
 
 export default function Login() {
   const { push } = useRouter();
@@ -58,6 +59,9 @@ export default function Login() {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-emerald-800 to-emerald-400">
+      <Head>
+        <title>GZAP | Entrar</title>
+      </Head>
       <h1 className="mb-12 text-5xl font-bold text-white">GZAP</h1>
       <Form {...form}>
         <form

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { format, parseISO } from 'date-fns';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-
+import Head from 'next/head';
 import { api } from '@/services/api';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { toast } from '@/components/ui/use-toast';
@@ -132,9 +132,11 @@ const Instance: React.FC = () => {
 
   return (
     <div className="flex h-screen justify-center p-16">
+      <Head>
+        <title>GZAP | Instância</title>
+      </Head>
       <div className="flex w-full max-w-full flex-col gap-3 overflow-auto p-4 sm:ml-[270px]">
         <h2 className="my-6 border-b pb-2 text-3xl font-semibold tracking-tight">Instância</h2>
-
         {whatsConnectionsInfo ? (
           <Card className="w-[380px]">
             <CardHeader>
@@ -158,7 +160,7 @@ const Instance: React.FC = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button onClick={() => mutate()} disabled={loadingLogout}>
+              <Button onClick={() => mutate()} disabled={loadingLogout} loading={loadingLogout} spinnerSize={24}>
                 Desconectar da Sessão
               </Button>
             </CardFooter>

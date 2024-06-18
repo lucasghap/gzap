@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import { useMediaQuery } from 'usehooks-ts';
 
 export default function GZapHome() {
@@ -7,6 +8,9 @@ export default function GZapHome() {
 
   return (
     <div className={`flex h-screen items-center justify-center  ${isDesktop ? 'ml-64' : 'ml-0'}`}>
+      <Head>
+        <title>GZAP</title>
+      </Head>
       <div className="text-center">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
           GZAP - Sua Central de Gerenciamento de Mensagens

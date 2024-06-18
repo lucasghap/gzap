@@ -45,9 +45,9 @@ const RegisterOrEditCompany: React.FC<CompanyModalProps> = ({ onClose, isEditing
     resolver: zodResolver(FormSchema),
     defaultValues: isEditing
       ? {
-          name: companySelected?.name || '',
-          cnpj: companySelected?.cnpj || '',
-        }
+        name: companySelected?.name || '',
+        cnpj: companySelected?.cnpj || '',
+      }
       : undefined,
   });
 
@@ -118,7 +118,7 @@ const RegisterOrEditCompany: React.FC<CompanyModalProps> = ({ onClose, isEditing
                 )}
               />
               <DialogFooter>
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} loading={isLoading} spinnerSize={24}>
                   Salvar
                 </Button>
               </DialogFooter>

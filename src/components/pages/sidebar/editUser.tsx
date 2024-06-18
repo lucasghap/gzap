@@ -171,7 +171,7 @@ const EditUserSidebar: React.FC<EditUserProps> = ({ onClose, userData }) => {
                 )}
               />
               <DialogFooter>
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} loading={isLoading} spinnerSize={24}>
                   Atualizar
                 </Button>
               </DialogFooter>

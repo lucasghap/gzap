@@ -225,7 +225,7 @@ const RegisterUser: React.FC<UserModalProps> = ({ onClose, isEditing, userSelect
               />
 
               <DialogFooter>
-                <Button type="submit" disabled={isLoading}>
+                <Button type="submit" disabled={isLoading} loading={isLoading} spinnerSize={24}>
                   Salvar
                 </Button>
               </DialogFooter>
