@@ -1,7 +1,8 @@
 import Head from 'next/head';
 import { useMediaQuery } from 'usehooks-ts';
+import withAuth from '@/hoc/withAuth';
 
-export default function GZapHome() {
+const GZAPHome: React.FC = () => {
   const isDesktop = useMediaQuery('(min-width: 640px)', {
     initializeWithValue: false,
   });
@@ -21,4 +22,6 @@ export default function GZapHome() {
       </div>
     </div>
   );
-}
+};
+
+export default withAuth(GZAPHome);

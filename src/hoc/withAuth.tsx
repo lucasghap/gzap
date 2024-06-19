@@ -1,3 +1,4 @@
+import { api } from '@/services/api';
 import Router, { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 
@@ -6,6 +7,7 @@ function withAuth(WrappedComponent: React.FC): React.FC {
     const router = useRouter();
     const [isClient, setIsClient] = useState(false);
     const [hasAccessToken, setHasAccessToken] = useState<boolean | null>(null);
+    const [userLogged, setUserLogged] = useState<any>(null);
 
     useEffect(() => {
       setIsClient(true);
@@ -41,7 +43,30 @@ function withAuth(WrappedComponent: React.FC): React.FC {
       }
     }, [router]);
 
-    if (!isClient || hasAccessToken === null) {
+    useEffect(() => {
+      const fetchUserLogged = async () => {
+        try {
+          const response = await api.get('/users/me');
+          setUserLogged(response.data);
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        }
+      };
+
+      if (hasAccessToken) {
+        fetchUserLogged();
+      }
+    }, [hasAccessToken]);
+
+    useEffect(() => {
+      if (userLogged?.type === 'user') {
+        if (router.pathname === '/usuarios' || router.pathname === '/empresas') {
+          router.replace('/gzap');
+        }
+      }
+    }, [userLogged, router]);
+
+    if (!isClient || hasAccessToken === null || !userLogged) {
       return null;
     }
 
