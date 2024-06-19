@@ -94,7 +94,13 @@ export default function Login() {
               </FormItem>
             )}
           />
-          <Button type="submit" className="w-full" variant="default">
+          <Button
+            type="submit"
+            className="w-full"
+            variant="default"
+            loading={form.formState.isSubmitting}
+            spinnerSize={24}
+          >
             Entrar
           </Button>
           <Button type="button" variant="link" onClick={() => setShowModalPassword(true)}>
