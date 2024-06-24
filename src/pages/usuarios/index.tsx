@@ -10,6 +10,7 @@ import withAuth from '@/hoc/withAuth';
 import { toast } from '@/components/ui/use-toast';
 import { Switch } from '@/components/ui/switch';
 import Head from 'next/head';
+import { Input } from '@/components/ui/input';
 
 interface User {
   createdAt: string;
@@ -27,6 +28,7 @@ const Users: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [userSelected, setUserSelected] = useState<User | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Estado para o termo de pesquisa
   const queryClient = useQueryClient();
 
   async function fetchUsers() {
@@ -84,6 +86,15 @@ const Users: React.FC = () => {
     updateUserStatus.mutate({ id: user.id, isActive: !user.isActive });
   };
 
+  const normalize = (str: string) => str.replace(/[^\w]/g, '').toLowerCase();
+
+  const filteredUsers = users?.filter((user: User) => {
+    const normalizedSearchTerm = normalize(searchTerm);
+    return (
+      user.name.toLowerCase().includes(normalizedSearchTerm) || normalize(user.email).includes(normalizedSearchTerm)
+    );
+  });
+
   return (
     <div className="ml-0 flex h-screen">
       <Head>
@@ -97,6 +108,14 @@ const Users: React.FC = () => {
             Adicionar Usuário
           </Button>
         </div>
+        <div className="my-4">
+          <Input
+            type="text"
+            placeholder="Pesquisar por Nome ou Email..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
@@ -108,7 +127,7 @@ const Users: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {users?.map((user: User) => (
+            {filteredUsers?.map((user: User) => (
               <TableRow key={user.id}>
                 <TableCell className="font-medium">{user.name}</TableCell>
                 <TableCell>{user.email}</TableCell>

@@ -5,12 +5,13 @@ import { Pencil } from 'phosphor-react';
 import { useState } from 'react';
 import { api } from '@/services/api';
 import { useQuery, useMutation, useQueryClient } from 'react-query';
-import { cnpjMask } from '@/utils/masks';
+import { cnpjMask, unmask } from '@/utils/masks';
 import RegisterOrEditCompany from '@/components/pages/empresas/registerOrEdit';
 import withAuth from '@/hoc/withAuth';
 import { toast } from '@/components/ui/use-toast';
 import { Switch } from '@/components/ui/switch';
 import Head from 'next/head';
+import { Input } from '@/components/ui/input';
 
 interface Company {
   id: string;
@@ -25,6 +26,7 @@ const Companies: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
   const [companySelected, setCompanySelected] = useState<Company | null>(null);
   const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>(''); // Novo estado para o termo de pesquisa
   const queryClient = useQueryClient();
 
   async function fetchCompanies() {
@@ -82,6 +84,16 @@ const Companies: React.FC = () => {
     updateCompanyStatus.mutate({ id: company.id, isActive: !company.isActive });
   };
 
+  const normalize = (str: string) => str.replace(/[^\w]/g, '').toLowerCase();
+
+  const filteredCompanies = companies?.filter((company: Company) => {
+    const normalizedSearchTerm = normalize(searchTerm);
+    return (
+      company.name.toLowerCase().includes(normalizedSearchTerm) ||
+      normalize(unmask(company.cnpj)).includes(normalizedSearchTerm)
+    );
+  });
+
   return (
     <div className="flex h-screen justify-center">
       <Head>
@@ -95,9 +107,18 @@ const Companies: React.FC = () => {
             Adicionar Empresa
           </Button>
         </div>
+        <div className="my-4">
+          <Input
+            type="text"
+            placeholder="Pesquisar Empresa ou CNPJ..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>Id</TableHead>
               <TableHead>Nome</TableHead>
               <TableHead>CNPJ</TableHead>
               <TableHead>Ativo</TableHead>
@@ -105,8 +126,9 @@ const Companies: React.FC = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {companies?.map((company: Company) => (
+            {filteredCompanies?.map((company: Company) => (
               <TableRow key={company.id}>
+                <TableCell className="w-96">{company.id}</TableCell>
                 <TableCell className="font-medium">{company.name}</TableCell>
                 <TableCell>{cnpjMask(company.cnpj)}</TableCell>
                 <TableCell>
