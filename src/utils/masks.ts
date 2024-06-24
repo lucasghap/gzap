@@ -14,7 +14,7 @@ export const cnpjMask = function (cnpj?: string): string | undefined {
 
 export const celMask = function (cel: string): string {
   if (cel) {
-    return mask(cel, ['99+(99) 99999-9999']);
+    return mask(cel, ['(99) 99999-9999']);
   } else {
     return '';
   }
