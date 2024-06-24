@@ -81,7 +81,6 @@ const Instance: React.FC = () => {
         });
         queryClient.invalidateQueries('@connections');
         setTimeLeft(0);
-        refetchQRCODE();
       },
     },
   );
