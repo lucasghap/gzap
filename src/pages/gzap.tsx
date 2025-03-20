@@ -10,11 +10,11 @@ const GZAPHome: React.FC = () => {
   return (
     <div className={`flex h-screen items-center justify-center  ${isDesktop ? 'ml-64' : 'ml-0'}`}>
       <Head>
-        <title>GZAP</title>
+        <title>LARA</title>
       </Head>
       <div className="text-center">
         <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl">
-          GZAP - Sua Central de Gerenciamento de Mensagens
+          LARA - Linguagem Aplicada de Realidade Autônoma (Central de Mensagens)
         </h1>
         <h2 className="mt-6 border-b pb-2 text-3xl font-semibold tracking-tight">
           Selecione uma das opções no menu lateral
