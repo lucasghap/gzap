@@ -1,18 +1,18 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useRouter } from 'next/router';
-import { toast } from '@/components/ui/use-toast';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Mail } from 'lucide-react';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { z } from 'zod';
-import { api } from '@/services/api';
-import { useState } from 'react';
-import * as Dialog from '@radix-ui/react-dialog';
 import ForgotPassword from '@/components/pages/login/forgotPassword';
+import { Button } from '@/components/ui/button';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { PasswordInput } from '@/components/ui/password-input';
+import { toast } from '@/components/ui/use-toast';
+import { api } from '@/services/api';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as Dialog from '@radix-ui/react-dialog';
+import { Mail } from 'lucide-react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 export default function Login() {
   const { push } = useRouter();
@@ -60,9 +60,9 @@ export default function Login() {
   return (
     <div className="flex h-screen flex-col items-center justify-center bg-gradient-to-b from-emerald-800 to-emerald-400">
       <Head>
-        <title>GZAP | Entrar</title>
+        <title>LARA | Entrar</title>
       </Head>
-      <h1 className="mb-12 text-5xl font-bold text-white">GZAP</h1>
+      <h1 className="mb-12 text-5xl font-bold text-white">LARA</h1>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -73,7 +73,7 @@ export default function Login() {
             name="username"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Usuário</FormLabel>
+                <FormLabel>Usuáffrio</FormLabel>
                 <FormControl>
                   <Input placeholder="Informe seu nome de usuário" {...field} suffix={<Mail />} />
                 </FormControl>
